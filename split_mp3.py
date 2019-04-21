@@ -60,11 +60,13 @@ if __name__ == '__main__':
         sampling_rate = int(sys.argv[2])
         mp3_length = int(sys.argv[3])
         num_segment = int(sys.argv[4])
+
         if not os.path.exists('wav_segment'):
             os.mkdir('wav_segment')
+
         create_wav_segment(df, sampling_rate, mp3_length, num_segment)
 
         os.remove('resample.mp3')
         os.remove('resample.wav')
     else:
-        print('usage: python split_mp3.py sampling_rate:22050 input_path:annotations_final_top_50_tag.csv mp3_length:29 num_segment:10')
+        print('usage: python split_mp3.py input_path:annotations_final_top_50_tag.csv sampling_rate:22050 mp3_length:29 num_segment:10')
