@@ -53,7 +53,7 @@ def create_wav_segment(df_input, sampling_rate, mp3_length, num_segment):
         split_mp3_to_wav_segment(file_name, sampling_rate, mp3_length, num_segment ,index)
 
 if __name__ == '__main__':
-    if len(sys.argv) > 3:
+    if len(sys.argv) == 5:
         input_path = sys.argv[1]
         df = pd.read_csv(input_path)
 

@@ -35,7 +35,7 @@ def split_dataset(df_input):
     return df_split
 
 if __name__ == '__main__':
-    if len(sys.argv) > 2:
+    if len(sys.argv) == 3:
         input_path = sys.argv[1]
         output_path = sys.argv[2]
 
