@@ -157,23 +157,23 @@ def create_predicted_value_by_fc_layer(feature_output_list, feature_size_dict, f
     predicted_value = Dense(50, activation='sigmoid')(x)
     return predicted_value
 
-def calcurate_num_train_and_val_sample(df):
-    count_train = 0
+def calcurate_num_train_and_val(df):
+    num_train = 0
     for index in df.index:
         split = df.split[index]
         clip_id = df.clip_id[index]
         if split == 'train':
-            count_train += 1
-    count_train *= 10
+            num_train += 1
+    num_train *= 10
 
-    count_val = 0
+    num_val = 0
     for index in df.index:
         split = df.split[index]
         clip_id = df.clip_id[index]
         if split == 'val':
-            count_val += 1
-    count_val *= 10
-    return count_train, count_val
+            num_val += 1
+    num_val *= 10
+    return num_train, num_val
 
 def generator(batch_size, df, labels, index_max, index_list, feature_name_list, feature_size_dict):
     while 1:
@@ -237,15 +237,15 @@ def train_model(df, feature_name_list, feature_size_dict, filters, num_blocks, w
     index_max_val = df_val.index.max()
     index_list_val = list(range(index_max_val))
 
-    count_train, count_val = calcurate_num_train_and_val_sample(df)
+    num_train, num_val = calcurate_num_train_and_val(df)
 
     train_gen = generator(batch_size,df_train,labels_train,index_max_train,index_list_train, feature_name_list, feature_size_dict)
 
     val_gen = generator(batch_size,df_val,labels_val,index_max_val,index_list_val, feature_name_list, feature_size_dict)
 
-    steps_per_epoch = math.ceil(count_train/batch_size)
+    steps_per_epoch = math.ceil(num_train/batch_size)
 
-    validation_steps = math.ceil(count_val/batch_size)
+    validation_steps = math.ceil(num_val/batch_size)
 
     if not os.path.exists('model'):
         os.mkdir('model')
@@ -306,4 +306,4 @@ if __name__=='__main__':
         train_model(df, feature_name_list, feature_size_dict, filters, num_blocks, weight_decay, dropout_rate, learning_rate, batch_size, epochs)
     
     else:
-        print('usage: python train.py input_path:annotations_final_top_50_tag.csv, filters:32, num_blocks:3, weight_decay:0.001, dropout_rate:0.5, learning_rate:0.01, batch_size:23, epochs:100')
+        print('usage: python train.py input_path:annotations_final_top_50_tag.csv filters:32 num_blocks:3 weight_decay:0.001 dropout_rate:0.5 learning_rate:0.01 batch_size:23 epochs:100')
