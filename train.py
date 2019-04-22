@@ -68,20 +68,8 @@ def calcurate_kernel_size_and_pool_size(feature_size, num_blocks):
             flag = False
     return count
 
-def create_feature_input_dict(feature_name_list, feature_size_dict):
-    feature_input_dict = {}
-    for feature_name in feature_name_list:
-        feature_size = feature_size_dict[feature_name]
-        if len(feature_size) == 1:
-            feature_input = Input(shape=(feature_size[0],),name=feature_name)
-        elif len(feature_size) == 2:
-            feature_input = Input(shape=(feature_size[0],feature_size[1], ),name=feature_name)
-        feature_input_dict[feature_name] = feature_input
-    return feature_input_dict
-
-def create_feature_output_1D(feature_size, feature_name, feature_input, filters, num_blocks, weight_decay):
+def create_feature_output_1D(feature_input, feature_size, filters, num_blocks, weight_decay):
     x = Reshape([-1,1])(feature_input)
-    
     kernel_size = calcurate_kernel_size_and_pool_size(feature_size[0], num_blocks)
     pool_size = calcurate_kernel_size_and_pool_size(feature_size[0], num_blocks)
 
@@ -93,7 +81,7 @@ def create_feature_output_1D(feature_size, feature_name, feature_input, filters,
     feature_output = GlobalMaxPool1D()(x)
     return feature_output
 
-def create_feature_output_2D(feature_size, feature_name, feature_input, filters, num_blocks, weight_decay):
+def create_feature_output_2D(feature_input, feature_size, filters, num_blocks, weight_decay):
     x = Reshape([feature_size[0] ,feature_size[1], 1])(feature_input)
 
     size_0 = calcurate_kernel_size_and_pool_size(feature_size[0], num_blocks)
@@ -108,43 +96,66 @@ def create_feature_output_2D(feature_size, feature_name, feature_input, filters,
         x = basic_block_conv2D(x, filters, kernel_size, weight_decay, pool_size)
 
     feature_output = GlobalMaxPool2D()(x)
-    print('feature_output!!!')
     return feature_output
 
-def create_concatenated_features(feature_size_dict, feature_name_list, filters, num_blocks, weight_decay):
-    feature_input_dict = create_feature_input_dict(feature_name_list, feature_size_dict)
+def create_input_and_output_list_of_all_features(feature_size_dict, filters, num_blocks, weight_decay):
+    zerocross_input = Input(shape=(feature_size_dict['zerocross'][0],),name='zerocross')
+    zerocross_output = create_feature_output_1D(zerocross_input, feature_size_dict['zerocross'], filters, num_blocks, weight_decay)
 
-    feature_output_list = []
-    for feature_name in feature_name_list:
-        feature_size = feature_size_dict[feature_name]
-        feature_input = feature_input_dict[feature_name]
-        if len(feature_size) == 1:
-            feature_output = create_feature_output_1D(feature_size, feature_name, feature_input, filters, num_blocks, weight_decay)
-        elif len(feature_size) == 2:
-            feature_output = create_feature_output_2D(feature_size, feature_name, feature_input, filters, num_blocks, weight_decay)
-        feature_output_list.append(feature_output)
-    return concatenate(feature_output_list)
+    rms_input = Input(shape=(feature_size_dict['rms'][0],),name='rms')
+    rms_output = create_feature_output_1D(rms_input, feature_size_dict['rms'], filters, num_blocks, weight_decay)
 
-def create_predicted_value_by_fc_layer(feature_size_dict, feature_name_list, filters, num_blocks, weight_decay, dropout_rate):
-    concatenated_features = create_concatenated_features(feature_size_dict, feature_name_list, filters, num_blocks, weight_decay)
-    x = Dense(concatenated_features.shape[-1].value)(concatenated_features)
+    pulseclarity_input = Input(shape=(feature_size_dict['pulseclarity'][0],),name='pulseclarity')
+    pulseclarity_output = create_feature_output_1D(pulseclarity_input, feature_size_dict['pulseclarity'], filters, num_blocks, weight_decay)
+
+    beatspectrum_input = Input(shape=(feature_size_dict['beatspectrum'][0],),name='beatspectrum')
+    beatspectrum_output = create_feature_output_1D(beatspectrum_input, feature_size_dict['beatspectrum'], filters, num_blocks, weight_decay)
+
+    flux_input = Input(shape=(feature_size_dict['flux'][0],),name='flux')
+    flux_output = create_feature_output_1D(flux_input, feature_size_dict['flux'], filters, num_blocks, weight_decay)
+
+    centroid_input = Input(shape=(feature_size_dict['centroid'][0],),name='centroid')
+    centroid_output = create_feature_output_1D(centroid_input, feature_size_dict['centroid'], filters, num_blocks, weight_decay)
+
+    rolloff_input = Input(shape=(feature_size_dict['rolloff'][0],),name='rolloff')
+    rolloff_output = create_feature_output_1D(rolloff_input, feature_size_dict['rolloff'], filters, num_blocks, weight_decay)
+
+    flatness_input = Input(shape=(feature_size_dict['flatness'][0],),name='flatness')
+    flatness_output = create_feature_output_1D(flatness_input, feature_size_dict['flatness'], filters, num_blocks, weight_decay)
+
+    entropy_input = Input(shape=(feature_size_dict['entropy'][0],),name='entropy')
+    entropy_output = create_feature_output_1D(entropy_input, feature_size_dict['entropy'], filters, num_blocks, weight_decay)
+
+    skewness_input = Input(shape=(feature_size_dict['skewness'][0],),name='skewness')
+    skewness_output = create_feature_output_1D(skewness_input, feature_size_dict['skewness'], filters, num_blocks, weight_decay)
+
+    kurtosis_input = Input(shape=(feature_size_dict['kurtosis'][0],),name='kurtosis')
+    kurtosis_output = create_feature_output_1D(kurtosis_input, feature_size_dict['kurtosis'], filters, num_blocks, weight_decay)
+
+    chromagram_input = Input(shape=(feature_size_dict['chromagram'][0],feature_size_dict['chromagram'][1], ),name='chromagram')
+    chromagram_output = create_feature_output_2D(chromagram_input, feature_size_dict['chromagram'], filters, num_blocks, weight_decay)
+
+    mfcc_input = Input(shape=(feature_size_dict['mfcc'][0],feature_size_dict['mfcc'][1], ),name='mfcc')
+    mfcc_output = create_feature_output_2D(mfcc_input, feature_size_dict['mfcc'], filters, num_blocks, weight_decay)
+
+    feature_input_list = [zerocross_input,rms_input,pulseclarity_input,beatspectrum_input,flux_input,
+                           centroid_input,rolloff_input,flatness_input,entropy_input,skewness_input,
+                           kurtosis_input,chromagram_input,mfcc_input]
+
+    feature_output_list = [zerocross_output,rms_output,pulseclarity_output,beatspectrum_output,flux_output,
+                            centroid_output,rolloff_output,flatness_output,entropy_output,skewness_output,
+                            kurtosis_output,chromagram_output,mfcc_output]
+
+    return feature_input_list, feature_output_list
+
+def create_predicted_value_by_fc_layer(feature_output_list, feature_size_dict, feature_name_list, filters, num_blocks, weight_decay, dropout_rate):
+    feature_output_concatenated = concatenate(feature_output_list)
+    x = Dense(feature_output_concatenated.shape[-1].value)(feature_output_concatenated)
     x = BatchNormalization()(x)
     x = Activation('relu')(x)
     x = Dropout(dropout_rate)(x)
     predicted_value = Dense(50, activation='sigmoid')(x)
     return predicted_value
-
-def create_model(feature_name_list, feature_size_dict, filters, num_blocks, weight_decay, dropout_rate):
-    feature_input_dict = create_feature_input_dict(feature_name_list, feature_size_dict)
-    predicted_value = create_predicted_value_by_fc_layer(feature_size_dict, feature_name_list, filters, num_blocks, weight_decay, dropout_rate)
-    print('feature_input_dict')
-    print(feature_input_dict)
-    print('predicted_value')
-    print(list(feature_input_dict.values()))
-
-    model = Model(list(feature_input_dict.values()), predicted_value)
-    print('model')
-    print(model)
 
 def calcurate_num_train_and_val_sample(df):
     count_train = 0
@@ -243,7 +254,11 @@ def train_model(df, feature_name_list, feature_size_dict, filters, num_blocks, w
     if not os.path.exists('my_log_dir'):
         os.mkdir('my_log_dir')
 
-    create_model(feature_name_list, feature_size_dict, filters, num_blocks, weight_decay, dropout_rate)
+    feature_input_list, feature_output_list = create_input_and_output_list_of_all_features(feature_size_dict, filters, num_blocks, weight_decay)
+
+    predicted_value = create_predicted_value_by_fc_layer(feature_output_list, feature_size_dict, feature_name_list, filters, num_blocks, weight_decay, dropout_rate)
+
+    model = Model(feature_input_list, predicted_value)
     sgd = optimizers.SGD(lr=learning_rate,momentum=0.9)
     model.compile(optimizer=sgd,
                   loss='binary_crossentropy',
