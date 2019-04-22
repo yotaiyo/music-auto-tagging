@@ -2,6 +2,7 @@ import sys
 import pandas as pd
 import numpy as np
 import pickle
+import os
 
 def normalization(df, feature_name_list, mean_dict, std_dict):
     for index in df.index:
@@ -32,6 +33,9 @@ if __name__=='__main__':
             mean_dict = pickle.load(f)
         with open('feature_mean_std/std.pickle',mode='rb') as f:
             std_dict = pickle.load(f)
+
+        if not os.path.exists('features_norm'):
+            os.mkdir('features_norm')
 
         normalization(df, feature_name_list, mean_dict, std_dict)
     else:

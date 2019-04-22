@@ -69,7 +69,7 @@ def calcurate_mean_and_std_of_all_features(df, feature_name_list, feature_size_d
         std_dict[feature_name] = calcurate_std(df, feature_name, feature_size, mean_dict[feature_name])
     return mean_dict, std_dict
 
-def save_mean_and_std(feature_name_list, mean_dict, std_dict):
+def save_mean_and_std(mean_dict, std_dict):
     if not os.path.exists('feature_mean_std'):
         os.mkdir('feature_mean_std')
 
@@ -90,7 +90,7 @@ if __name__=='__main__':
         feature_size_dict = load_feature_size(df, feature_name_list)
 
         mean_dict, std_dict = calcurate_mean_and_std_of_all_features(df, feature_name_list, feature_size_dict)
-        save_mean_and_std(feature_name_list, mean_dict, std_dict)
+        save_mean_and_std(mean_dict, std_dict)
     else:
         print('usage: python save_statistics_of_features.py input_path:annotations_final_top_50_tag.csv')
 
