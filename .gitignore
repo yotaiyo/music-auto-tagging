@@ -1,0 +1,10 @@
+/features/
+/mp3/
+/wav_segment/
+/features_dir/
+/feature_mean_std/
+/features_norm/
+/model/
+/train_log/
+/my_log_dir/
+*.csv
