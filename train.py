@@ -98,53 +98,20 @@ def create_feature_output_2D(feature_input, feature_size, filters, num_blocks, w
     feature_output = GlobalMaxPool2D()(x)
     return feature_output
 
-def create_input_and_output_list_of_all_features(feature_size_dict, filters, num_blocks, weight_decay):
-    zerocross_input = Input(shape=(feature_size_dict['zerocross'][0],),name='zerocross')
-    zerocross_output = create_feature_output_1D(zerocross_input, feature_size_dict['zerocross'], filters, num_blocks, weight_decay)
+def create_input_and_output_list_of_all_features(feature_name_list, feature_size_dict, filters, num_blocks, weight_decay):
+    feature_input_list = []
+    feature_output_list = []
+    for feature_name in feature_name_list:
+        feature_size = feature_size_dict[feature_name]
+        if len(feature_size) == 1:
+            feature_input = Input(shape=(feature_size_dict[feature_name][0],),name=feature_name)
+            feature_output = create_feature_output_1D(feature_input, feature_size_dict[feature_name], filters, num_blocks, weight_decay)
+        elif len(feature_size) == 2:
+            feature_input = Input(shape=(feature_size_dict[feature_name][0],feature_size_dict[feature_name][1], ),name=feature_name)
+            feature_output = create_feature_output_2D(feature_input, feature_size_dict[feature_name], filters, num_blocks, weight_decay)
 
-    rms_input = Input(shape=(feature_size_dict['rms'][0],),name='rms')
-    rms_output = create_feature_output_1D(rms_input, feature_size_dict['rms'], filters, num_blocks, weight_decay)
-
-    pulseclarity_input = Input(shape=(feature_size_dict['pulseclarity'][0],),name='pulseclarity')
-    pulseclarity_output = create_feature_output_1D(pulseclarity_input, feature_size_dict['pulseclarity'], filters, num_blocks, weight_decay)
-
-    beatspectrum_input = Input(shape=(feature_size_dict['beatspectrum'][0],),name='beatspectrum')
-    beatspectrum_output = create_feature_output_1D(beatspectrum_input, feature_size_dict['beatspectrum'], filters, num_blocks, weight_decay)
-
-    flux_input = Input(shape=(feature_size_dict['flux'][0],),name='flux')
-    flux_output = create_feature_output_1D(flux_input, feature_size_dict['flux'], filters, num_blocks, weight_decay)
-
-    centroid_input = Input(shape=(feature_size_dict['centroid'][0],),name='centroid')
-    centroid_output = create_feature_output_1D(centroid_input, feature_size_dict['centroid'], filters, num_blocks, weight_decay)
-
-    rolloff_input = Input(shape=(feature_size_dict['rolloff'][0],),name='rolloff')
-    rolloff_output = create_feature_output_1D(rolloff_input, feature_size_dict['rolloff'], filters, num_blocks, weight_decay)
-
-    flatness_input = Input(shape=(feature_size_dict['flatness'][0],),name='flatness')
-    flatness_output = create_feature_output_1D(flatness_input, feature_size_dict['flatness'], filters, num_blocks, weight_decay)
-
-    entropy_input = Input(shape=(feature_size_dict['entropy'][0],),name='entropy')
-    entropy_output = create_feature_output_1D(entropy_input, feature_size_dict['entropy'], filters, num_blocks, weight_decay)
-
-    skewness_input = Input(shape=(feature_size_dict['skewness'][0],),name='skewness')
-    skewness_output = create_feature_output_1D(skewness_input, feature_size_dict['skewness'], filters, num_blocks, weight_decay)
-
-    kurtosis_input = Input(shape=(feature_size_dict['kurtosis'][0],),name='kurtosis')
-    kurtosis_output = create_feature_output_1D(kurtosis_input, feature_size_dict['kurtosis'], filters, num_blocks, weight_decay)
-
-    chromagram_input = Input(shape=(feature_size_dict['chromagram'][0],feature_size_dict['chromagram'][1], ),name='chromagram')
-    chromagram_output = create_feature_output_2D(chromagram_input, feature_size_dict['chromagram'], filters, num_blocks, weight_decay)
-
-    mfcc_input = Input(shape=(feature_size_dict['mfcc'][0],feature_size_dict['mfcc'][1], ),name='mfcc')
-    mfcc_output = create_feature_output_2D(mfcc_input, feature_size_dict['mfcc'], filters, num_blocks, weight_decay)
-
-    feature_input_list = [zerocross_input,rms_input,pulseclarity_input,beatspectrum_input,flux_input,
-                           centroid_input,rolloff_input,flatness_input,entropy_input,skewness_input,
-                           kurtosis_input,chromagram_input,mfcc_input]
-
-    feature_output_list = [zerocross_output,rms_output,pulseclarity_output,beatspectrum_output,flux_output,
-                            centroid_output,rolloff_output,flatness_output,entropy_output,skewness_output,
-                            kurtosis_output,chromagram_output,mfcc_output]
+        feature_input_list.append(feature_input)
+        feature_output_list.append(feature_output)
 
     return feature_input_list, feature_output_list
 
