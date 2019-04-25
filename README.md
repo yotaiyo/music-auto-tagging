@@ -6,10 +6,10 @@ MagnaTagATune(MTAT)データセットを用いて、楽曲タグ予測モデル�
 ## データセットの準備
 1, [ここ](http://mirg.city.ac.uk/codeapps/the-magnatagatune-dataset)からデータセットをダウンロード。
 ```
+ annotations_final.csv
  mp3.zip.001
  mp3.zip.002
  mp3.zip.003
- annotations_final.csv
 ```
 を取得。
 
@@ -25,7 +25,7 @@ MTATは25863曲、188個のタグから成るが、タグのヒストグラム�
 
 この時点で、以下のようなディレクトリ構成になる。
 ```
-dataset
+music-auto-tagging
 ├─ annotations_final.csv
 ├─ annotations_final_top_50_tag.csv
 └─ mp3
