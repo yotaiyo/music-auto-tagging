@@ -8,3 +8,4 @@
 /train_log/
 /my_log_dir/
 *.csv
+.DS_Store
