@@ -30,7 +30,7 @@ dataset
 ├─ annotations_final_top_50_tag.csv
 └─ mp3
    ├── 0
-   ├── ...
+   ├── ~
    └── f
 ```
 
@@ -41,7 +41,7 @@ MTATのサンプルは30秒程度の長さからなるが、このままでは�
 
 ## 特徴量の抽出
 [MIRtoolbox](https://www.jyu.fi/hytk/fi/laitokset/mutku/en/research/materials/mirtoolbox)を用い、13種類の特徴量を抽出する。  
-計算性能に余力がある場合、wav_to_features.mの10行目を変更して、並列で計算を走らせると早く終わる。(ex. 1~7000,7001~14000,14001~21110に分割)
+計算性能に余力がある場合、wav_to_features.mの10行目を変更して、並列で計算を走らせると早く終わる。(ex. 1-7000,7001-14000,14001-21110に分割)
 
 - wav_to_features(10, 22050, 0.050, 0.025)
 
@@ -52,7 +52,7 @@ MTATのサンプルは30秒程度の長さからなるが、このままでは�
 2, 正規化
 - python normalization.py annotations_final_top_50_tag.csv　　
 
-計算性能に余力がある場合、normalization.pyの8行目を変更して、並列で計算を走らせると早く終わる。(ex. 0~5000,5000~10000,10000~15000,15000~21111に分割)
+計算性能に余力がある場合、normalization.pyの8行目を変更して、並列で計算を走らせると早く終わる。(ex. 0-5000,5000-10000,10000-15000,15000-21111に分割)
 
 3, パスの作成
 - python create_features_norm_dir.py annotations_final_top_50_tag.csv　　
@@ -63,7 +63,7 @@ MTATのサンプルは30秒程度の長さからなるが、このままでは�
 ## 作成したモデルの評価
 -  python eval.py annotations_final_top_50_tag.csv 10 model/my_model_epoch-val_loss.hdf5  
 
-評価指標として、50タグからroc-aucの平均値を計算する。0~1の範囲で大きいほど、予測性能の良いモデルであるといえる。
+評価指標として、50タグからroc-aucの平均値を計算する。0-1の範囲で大きいほど、予測性能の良いモデルであるといえる。
 
 
 
