@@ -192,7 +192,7 @@ def train_model(df, feature_name_list, feature_size_dict, filters, num_blocks, w
     if not os.path.exists('my_log_dir'):
         os.mkdir('my_log_dir')
 
-    feature_input_list, feature_output_list = create_input_and_output_list_of_all_features(feature_size_dict, filters, num_blocks, weight_decay)
+    feature_input_list, feature_output_list = create_input_and_output_list_of_all_features(feature_name_list, feature_size_dict, filters, num_blocks, weight_decay)
 
     predicted_value = create_predicted_value_by_fc_layer(feature_output_list, feature_size_dict, feature_name_list, filters, num_blocks, weight_decay, dropout_rate)
 
