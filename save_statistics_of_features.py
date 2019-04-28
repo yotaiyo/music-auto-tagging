@@ -2,18 +2,8 @@ import sys
 import numpy as np
 import pandas as pd
 import pickle
+from utils import load_feature_size
 import os
-
-def load_feature_size(df, feature_name_list):
-    index = 0
-    split = df.split[index]
-    clip_id = df.clip_id[index]
-    feature_size_dict = {}
-    for feature_name in feature_name_list:
-        feature_dir = 'features/%s_%s_%d_1.txt' %(feature_name,split,clip_id)
-        feature = np.loadtxt(feature_dir,skiprows=1)
-        feature_size_dict[feature_name] = feature.shape
-    return feature_size_dict
 
 def calcurate_mean(df, feature_name, feature_size):
     print('start calcurate %s mean' %feature_name)

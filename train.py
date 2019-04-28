@@ -16,25 +16,12 @@ from keras.models import Model
 from keras.regularizers import l2
 from keras import optimizers
 import time
+from utils import load_feature_size
+from utils import load_feature
+from utils import calcurate_num_samples 
 
 print('keras_version', keras.__version__)
 print('tf.__version__', tf.__version__)
-
-def load_feature_size(df, feature_name_list):
-    index = 0
-    split = df.split[index]
-    clip_id = df.clip_id[index]
-    feature_size_dict = {}
-    for feature_name in feature_name_list:
-        feature_dir = 'features/%s_%s_%d_1.txt' %(feature_name,split,clip_id)
-        feature = np.loadtxt(feature_dir,skiprows=1)
-        feature_size_dict[feature_name] = feature.shape
-    return feature_size_dict
-
-def load_feature(feature_dir):
-    with open('%s' %feature_dir, 'rb') as f:
-        feature = pickle.load(f)
-    return feature
 
 def load_feature_dir(split_name):
     feature_dir_dir = 'features_dir/feature_%s_dir.csv' %(split_name)
@@ -124,24 +111,6 @@ def create_predicted_value_by_fc_layer(feature_output_list, feature_size_dict, f
     predicted_value = Dense(50, activation='sigmoid')(x)
     return predicted_value
 
-def calcurate_num_train_and_val(df):
-    num_train = 0
-    for index in df.index:
-        split = df.split[index]
-        clip_id = df.clip_id[index]
-        if split == 'train':
-            num_train += 1
-    num_train *= 10
-
-    num_val = 0
-    for index in df.index:
-        split = df.split[index]
-        clip_id = df.clip_id[index]
-        if split == 'val':
-            num_val += 1
-    num_val *= 10
-    return num_train, num_val
-
 def generator(batch_size, df, labels, index_max, index_list, feature_name_list, feature_size_dict):
     while 1:
         indices = random.sample(index_list,batch_size)
@@ -204,7 +173,9 @@ def train_model(df, feature_name_list, feature_size_dict, filters, num_blocks, w
     index_max_val = df_val.index.max()
     index_list_val = list(range(index_max_val))
 
-    num_train, num_val = calcurate_num_train_and_val(df)
+    num_train = calcurate_num_samples(df, 'train')
+
+    num_val = calcurate_num_samples(df, 'val')
 
     train_gen = generator(batch_size,df_train,labels_train,index_max_train,index_list_train, feature_name_list, feature_size_dict)
 
