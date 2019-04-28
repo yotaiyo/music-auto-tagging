@@ -3,6 +3,15 @@
 ## Overview 
 MagnaTagATune(MTAT)データセットを用いて、楽曲タグ予測モデルの構築から評価まで行うレポジトリ。
 
+## Requirements
+- keras
+- tensorflow
+- sklearn
+- MIRtoolbox
+- numpy
+- pandas
+- lame
+
 ## データセットの準備
 1, [ここ](http://mirg.city.ac.uk/codeapps/the-magnatagatune-dataset)からデータセットをダウンロード。
 ```
