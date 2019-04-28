@@ -7,10 +7,10 @@ MagnaTagATune(MTAT)データセットを用いて、楽曲タグ予測モデル�
 - keras
 - tensorflow
 - sklearn
-- MIRtoolbox
+- [MIRtoolbox](https://www.jyu.fi/hytk/fi/laitokset/mutku/en/research/materials/mirtoolbox)
 - numpy
 - pandas
-- lame
+- [lame](http://lame.sourceforge.net/)
 
 ## データセットの準備
 1, [ここ](http://mirg.city.ac.uk/codeapps/the-magnatagatune-dataset)からデータセットをダウンロード。
