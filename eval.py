@@ -15,7 +15,7 @@ def calcurate_roc_auc(df, num_test, num_segment, feature_name_list, feature_size
     y_pred = np.zeros((num_test,50))
     y_true = np.zeros((num_test,50))
     count = 0
-    for index in range(1,1000):
+    for index in df.index:
         split = df.split[index]
         clip_id = df.clip_id[index]
         if split == 'test':
