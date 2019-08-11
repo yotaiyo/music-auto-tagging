@@ -29,7 +29,7 @@ unzip mp3_all.zip
 ```
 
 3, python organize_mtt.py annotations_final.csv annotations_final_top_50_tag.csv  
-MTATは25863曲、188個のタグから成るが、タグのヒストグラムがアンバランスであるため、使用頻度の高い上位50個のタグをしようすることが望ましい。（https://github.com/keunwoochoi/magnatagatune-list）  
+MTATは25863曲、188個のタグから成るが、タグのヒストグラムがアンバランスであるため、使用頻度の高い上位50個のタグを使用することが望ましい。（https://github.com/keunwoochoi/magnatagatune-list）  
 そこで、余計なタグの削除とその結果、割り振られなくなったサンプルの削除を行う必要がある。
 
 ## mp3ファイルの分割
